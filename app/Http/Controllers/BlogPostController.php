@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBlogRequest;
+use App\Http\Requests\UpdateBlogRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\BlogPost;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,20 +16,21 @@ class BlogPostController extends Controller
 {
     public function index(){
             $posts = $this->addUserField();
-            $response = new ApiResponse($posts,'Blog Posts Retrived Successfully!');
-            $response = $response->successResponse();
+            // $response = new ApiResponse($posts,'Blog Posts Retrived Successfully!');
+            // $response = $response->successResponse();
             return view('blog.index', [
-                    'posts' => $response,
+                    'posts' => $posts,
                 ]);
     }
     
     public function addUserField(){
-        $posts = BlogPost::with('user')->where('status','approved')->latest()->take(10)->get()->toArray();
+        $posts = BlogPost::with('user')->where('status','approved')->orderBy('created_at','desc')->paginate(1);
         return $posts;
     }
 
     public function create()
     {
+        
         if (!Auth::user()){
             return redirect()->route('login')->withError('Please Login To Access The Page');
         }else{
@@ -43,13 +46,13 @@ class BlogPostController extends Controller
             $image= $request->file('image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
             $request->image->move(public_path('images'), $filename);
-          };
+            };
 
-          $data = $request->all();
-          $newPost = $this->createBlog($data,$filename);
+            $data = $request->all();
+            $newPost = $this->createBlog($data,$filename);
 
 
-        return redirect('blog/' . $newPost->id);
+        return redirect('blog/' . $newPost->id);        
     }
 
     public function createBlog($data,$filename){
@@ -70,12 +73,12 @@ class BlogPostController extends Controller
     }
 
     public function showUserPost(String $id)
-    {   
-        $data = BlogPost::with('user')->where('user_id',$id)->latest()->take(10)->get()->toArray();
-        $response = new ApiResponse($data,'Blog Posts Retrived Successfully!');
-        $response = $response->successResponse();
+    {    
+        $posts = BlogPost::with('user')->where('user_id',$id)->orderBy('created_at','desc')->paginate(1);
+        // $response = new ApiResponse($data,'Blog Posts Retrived Successfully!');
+        // $response = $response->successResponse();
         return view('blog.user-posts', [
-            'post' => $response,
+            'posts' => $posts,
         ]);
     }
 
@@ -99,7 +102,7 @@ class BlogPostController extends Controller
     }
 
     
-    public function update(StoreBlogRequest $request, String $id): RedirectResponse
+    public function update(UpdateBlogRequest $request, String $id): RedirectResponse
     {   
         if($request->hasFile('image')){
             $image= $request->file('image');

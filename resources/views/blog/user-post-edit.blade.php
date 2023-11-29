@@ -14,7 +14,7 @@
                 @auth
                 <a href="/blog/{{ $post->id }}/edit" class="btn btn-outline-primary">Edit Post</a>
                 <br><br>
-                <form id="delete-frm" class="" action="" method="POST">
+                <form id="delete-frm" class="" action="{{route('blog.destroy',$post->id)}}" method="POST">
                     @method('DELETE')
                     @csrf
                     <button class="btn btn-danger">Delete Post</button>

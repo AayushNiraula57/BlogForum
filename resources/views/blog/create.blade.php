@@ -24,6 +24,9 @@
                 <label for="title">Post Title</label>
                 <input type="text" id="title" class="form-control" name="title" placeholder="Enter Post Title"
                     value="{{ old('title') }}">
+                @if(session('response'))
+                    {!! session()->get('response') !!}
+                @endif
                 @error('title')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror

@@ -12,6 +12,7 @@ class StoreBlogRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
+    // protected $redirectRoute = 'blog.create';
     public function authorize(): bool
     {
         return true;
@@ -27,12 +28,20 @@ class StoreBlogRequest extends FormRequest
         return [
             'title' => 'required|string',
             'body' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ];
     }
-    public function failedValidation(Validator $validator)
-    {
-        $response = new ApiResponse($validator->errors(),'Error in form field validation !!');
-        throw new HttpResponseException($response->errorResponse());
-    }
+
+
+
+    // public function failedValidation(Validator $validator)
+    // {
+    //     $response = new ApiResponse($validator->errors(),'Error in form field validation !!');
+    //     $response = $response->errorResponse();
+    //     // dd($response->getData()->data->title[0]);
+    //     // throw new HttpResponseException($response);
+    //     // dd($response->getData());
+    //     return redirect('/')->with('response',$response);
+    //     // return response()->json($validator->errors());
+    // }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminRegisterationRequest;
+use App\Http\Requests\LoginRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Admin;
 use Illuminate\Http\Request;
@@ -15,11 +17,7 @@ class AdminController extends Controller
         return view('admin.login');
     }
 
-    public function login(Request $request){
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:6',
-        ]);
+    public function login(LoginRequest $request){
         
         $credentials = Admin::where('email',$request->email)->first();
         if(is_null($credentials)){
@@ -47,15 +45,8 @@ class AdminController extends Controller
         return view('admin.registration');
     }
 
-    public function registerAdmin(Request $request){
-        $validator = Validator::make($request->all(),[
-            'name' => 'required',
-            'email' => 'required|email|unique:admins',
-            'password' => 'required|min:6',
-        ]);
-        if($validator->fails()){
-            return redirect('admin/registration')->withErrors($validator)->withInput();
-        }
+    public function registerAdmin(AdminRegisterationRequest $request){
+
         $data = $request->all();
         $check = $this->store($data);
         return redirect("admin/login")->withSuccess('You have signed-in');

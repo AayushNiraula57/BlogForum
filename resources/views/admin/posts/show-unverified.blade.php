@@ -3,10 +3,6 @@
 @section('content')
 <?php 
 $sn=1;
-$allData = $posts->getData();
-$data = $allData->data;
-$count = count($data);
-// dd($data[0]->id);
 ?>
 <div class="container">
     <h4>All Posts</h4>
@@ -20,33 +16,43 @@ $count = count($data);
             <th scope="col">Action</th>
           </tr>
         </thead>
-      @for($i=0;$i<$count;$i++)
+      @foreach($posts as $post)
       <tbody>
         <tr>
           <th scope="row">{{$sn}}</th>
           <td>
-              <img src="{{asset('images/'.$data[$i]->image)}}" class="img-thumbnail" height="200px" width="200px" alt="">
+              <img src="{{asset('images/'.$post->image)}}" class="img-thumbnail" height="200px" width="200px" alt="">
           </td>
           <td>
               <div class="container">
-                  <a href="">{{$data[$i]->title}}</a>
-                  <p>{{$data[$i]->body}}</p>
+                  <a href="">{{$post->title}}</a>
+                  <p>{{$post->body}}</p>
               </div>
           </td>
           <td>
-            <p>{{$data[$i]->status}}</p>
+            <p>{{$post->status}}</p>
           </td>
           <td>
             <div class="container d-flex">
-              <a href="{{route('admin.verify',$data[$i]->id)}}" class="btn btn-success mx-2">Verify</a>
-              <a href="" class="btn btn-danger mx-2">Delete</a>
+              <div class="column">
+                <a href="{{route('admin.post_destroy',$post->id)}}" class="btn btn-success mx-2">Verify</a>
+              </div>
+              <div class="column"> 
+                <form id="delete-frm" class="" action="{{route('blog.destroy',$post->id)}}" method="POST">
+                    @method('DELETE')
+                    @csrf
+                    <button type="submit" class="btn btn-danger mx-2">Delete</button>
+                </form>
+              </div>
+              {{-- <a href="" class="btn btn-danger mx-2">Delete</a> --}}
             </div>
           </td>
         </tr>
       </tbody>
       <?php $sn++ ?>
-      @endfor
+      @endforeach
     </table>
+    {{$posts->links()}}
 </div>
 
 @endsection

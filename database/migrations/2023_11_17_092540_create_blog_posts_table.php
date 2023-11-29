@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->text('title');  // Title of our blog post          
             $table->text('body');   // Body of our blog post    
-            $table->string('image');             
-            $table->integer('user_id'); // user_id of our blog post author
+            $table->string('image');
+            $table->unsignedBigInteger('user_id');            
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // user_id of our blog post author
             $table->string('status')->default('unapproved');
             $table->timestamps();
         });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -17,12 +18,8 @@ class AuthController extends Controller
         return view('auth.login');
     }  
       
-    public function customLogin(Request $request)
+    public function customLogin(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:6',
-        ]);
    
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {

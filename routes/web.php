@@ -31,10 +31,11 @@ Route::post('/blog/create/post', [BlogPostController::class, 'store'])->name('bl
 Route::get('/blog/{blogPost}/edit', [BlogPostController::class, 'edit'])->name('blog.edit');
 Route::put('/blog/{blogPost}/edit', [BlogPostController::class, 'update'])->name('blog.update');
 Route::get('/blog/show/{id}', [BlogPostController::class, 'showUserPost'])->name('blog.user.show');
+Route::delete('/blog/{blogPost}', [BlogPostController::class, 'destroy'])->name('blog.destroy');
 Route::get('/blog/manage/{blogPost}', [BlogPostController::class, 'managePost'])->name('blog.manage_post');
 Route::get('signout', [AuthController::class, 'signOut'])->name('signout');
 });
-Route::delete('/blog/{blogPost}', [BlogPostController::class, 'destroy'])->name('blog.destroy');
+
 
 // Route::get('dashboard', [AuthController::class, 'dashboard']); 
 Route::get('login', [AuthController::class, 'index'])->name('login');
@@ -45,8 +46,8 @@ Route::post('custom-registration', [AuthController::class, 'customRegistration']
 Route::prefix('admin')->group(function(){
     Route::get('login',[AdminController::class,'index'])->name('admin.login');
     Route::post('custom-login',[AdminController::class,'login'])->name('admin.login_custom');
-    Route::get('registration',[AdminController::class,'registration'])->name('admin.registration')->middleware('auth.admin');
-    Route::post('registration',[AdminController::class,'registerAdmin'])->name('admin.store')->middleware('auth.admin');
+    Route::get('registration',[AdminController::class,'registration'])->name('admin.registration');
+    Route::post('registration',[AdminController::class,'registerAdmin'])->name('admin.store');
     Route::get('dashboard',[AdminBlogController::class,'dashboard'])->name('admin.dashboard')->middleware('auth.admin');
     Route::get('signout', [AdminController::class, 'signOut'])->name('admin.signout')->middleware('auth.admin');
 });
@@ -56,4 +57,8 @@ Route::group(['prefix'=>'admin','middleware'=>'auth.admin'],function(){
     Route::get('show/verified',[AdminBlogController::class,'displayVerifiedPosts'])->name('admin.show_verified');
     Route::get('verify/{id}',[AdminBlogController::class,'verifyPosts'])->name('admin.verify');
     Route::get('posts/manage',[AdminBlogController::class,'managePosts'])->name('admin.manage');
+    Route::delete('user/{user}', [AdminBlogController::class, 'destroyUser'])->name('admin.user_destroy');
+    Route::get('post/{post}', [AdminBlogController::class, 'destroyPost'])->name('admin.post_destroy');
+    Route::get('trash', [AdminBlogController::class, 'trash'])->name('admin.trash');
+    Route::get('restore/{post}', [AdminBlogController::class, 'restore'])->name('admin.post_restore');
 });
