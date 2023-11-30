@@ -30,7 +30,7 @@ $sn=1;
           </td>
           <td>
               <div class="container">
-                  <a href="">{{$post->title}}</a>
+                  <a href="{{route('admin.show_post',$post->id)}}">{{$post->title}}</a>
                   <p>{{$post->body}}</p>
               </div>
           </td>

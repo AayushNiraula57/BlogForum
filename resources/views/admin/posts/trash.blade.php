@@ -1,6 +1,6 @@
 @extends('admin.layouts.layout')
 @include('admin.inc.navbar')
-@section('title','Dashboard')
+@section('title','Trash')
 @section('content')
 <?php 
 $sn=1;
@@ -47,7 +47,7 @@ $sn=1;
                 <a href="{{route('admin.post_restore',$post->id)}}" class="btn btn-success mx-2">Restore Post</a>
               </div>
               <div class="column"> 
-                <form id="delete-frm" class="" action="" method="POST">
+                <form id="delete-frm" class="" action="{{route('admin.post_destroy',$post->id)}}" method="POST">
                     @method('DELETE')
                     @csrf
                     <button type="submit" class="btn btn-danger mx-2">Delete Post</button>

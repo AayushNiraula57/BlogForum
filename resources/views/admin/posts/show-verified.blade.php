@@ -1,11 +1,12 @@
 @extends('admin.layouts.layout')
 @include('admin.inc.navbar')
+@section('title','Approved Posts')
 @section('content')
 <?php 
 $sn=1;
 ?>
 <div class="container">
-    <h4>All Posts</h4>
+    <h4>Verified Posts</h4>
     <table class="table">
         <thead>
           <tr>
@@ -25,17 +26,17 @@ $sn=1;
           </td>
           <td>
               <div class="container">
-                  <a href="">{{$post->title}}</a>
+                  <a href="{{route('admin.show_post',$post->id)}}">{{$post->title}}</a>
                   <p>{{$post->body}}</p>
               </div>
           </td>
           <td>
-            <p>{{$post->status}}</p>
+            <p class="badge bg-success">{{$post->status}}</p>
           </td>
           <td>
             <div class="container d-flex">
               <div class="column">
-                <a href="{{route('admin.post_destroy',$post->id)}}" class="btn btn-warning mx-2">Delete Post</a>
+                <a href="{{route('admin.post_trash',$post->id)}}" class="btn btn-warning mx-2">Delete Post</a>
               </div>
               <div class="column"> 
                 <form id="delete-frm" class="" action="{{route('admin.user_destroy',$post->user_id)}}" method="POST">

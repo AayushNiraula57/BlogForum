@@ -1,19 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminRegisterationRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
 
-class AdminController extends Controller
+class AuthController extends Controller
 {
-    public function index(){
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
         return view('admin.login');
     }
 
@@ -39,33 +44,64 @@ class AdminController extends Controller
         }
     }
 
-
-
-    public function registration(){
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
         return view('admin.registration');
     }
 
-    public function registerAdmin(AdminRegisterationRequest $request){
-
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(AdminRegisterationRequest $request)
+    {
         $data = $request->all();
-        $check = $this->store($data);
-        return redirect("admin/login")->withSuccess('You have signed-in');
-    }
-
-    public function store(array $data){
-        return Admin::create([
+        Admin::create([
             'name'=> $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        return redirect("admin/login")->withSuccess('You have signed-in');
     }
 
-    public function dashboard(){
-        return view('admin.dashboard');
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
     }
 
-    public function signOut(){
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function signout()
+    {
         Session::flush();
         return redirect()->route('admin.login');
+    }
+
+    public function destroy(User $user)
+    {
+        $user->delete();
+        return redirect()->route('admin.show_verified');
     }
 }

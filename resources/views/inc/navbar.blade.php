@@ -1,4 +1,4 @@
-<nav class="navbar navbar-light navbar-expand-lg mb-5" style="background-color: #e3f2fd;">
+<nav class="navbar navbar-light navbar-expand-lg mb-5 sticky-top" style="background-color: #e3f2fd;">
     <div class="container">
         <a class="navbar-brand mr-auto" href="#">BlogApp</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -20,10 +20,10 @@
                     <a class="nav-link">Hello,{{Auth::user()->name}} | </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/blog/create/post">Add Post | </a>
+                    <a class="nav-link" href="{{route('blog.create')}}">Add Post | </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/blog/show/{{Auth::user()->id}}">My Posts | </a>
+                    <a class="nav-link" href="{{route('blog.user_posts',Auth::user()->id)}}">My Posts | </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('signout') }}">Logout</a>
