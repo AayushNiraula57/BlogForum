@@ -39,11 +39,7 @@ $sn=1;
                 <a href="{{route('admin.verify',$post->id)}}" class="btn btn-success mx-2">Verify</a>
               </div>
               <div class="column"> 
-                <form id="delete-frm" class="" action="{{route('admin.post_trash',$post->id)}}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <button type="submit" class="btn btn-danger mx-2">Delete</button>
-                </form>
+                <a href="{{route('admin.post_trash',$post->id)}}" class="btn btn-danger mx-2">Delete</a>
               </div>
             </div>
           </td>

@@ -38,7 +38,7 @@ Route::put('/blog/{blogPost}/edit', [UserPostController::class, 'update'])->name
 Route::delete('/blog/{blogPost}', [UserPostController::class, 'destroy'])->name('blog.destroy');
 Route::get('/blog/show/{id}', [UserBlogController::class, 'show'])->name('blog.manage_post');
 Route::get('/blog/user/{blogPost}', [UserBlogController::class, 'index'])->name('blog.user_posts');
-Route::get('signout', [AuthController::class, 'signout'])->name('signout');
+Route::get('signout', [UserAuthController::class, 'signout'])->name('signout');
 });
 
 

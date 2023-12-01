@@ -4,18 +4,23 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
-use Illuminate\Http\Request;
+use App\Repositories\Interfaces\PostRepositoryInterface;
 
 class UnverifiedPostController extends Controller
 {
+    private $postRepository;
+
+    public function __construct(PostRepositoryInterface $postRepository){
+        
+        $this->postRepository = $postRepository; 
+
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $posts = BlogPost::with('user')->where('status','unapproved')->orderBy('created_at','desc')->paginate(2);
-        // $response = new ApiResponse($posts,"All Posts Retrived Successfully");
-        // $response = $response->successResponse();
+        $posts = $this->postRepository->unverifiedPosts();
         return view('admin.posts.show-unverified',['posts'=> $posts]);
         //dd($posts);
     }
@@ -27,7 +32,7 @@ class UnverifiedPostController extends Controller
      */
     public function show(string $id)
     {
-        $post = BlogPost::where('id',$id)->first();
+        $post = $this->postRepository->findPost($id);
         return view('admin.posts.show',['post'=>$post]);
     }
 
@@ -36,9 +41,7 @@ class UnverifiedPostController extends Controller
      */
     public function edit(string $id)
     {
-        $post = BlogPost::find($id);
-        $post->status = 'approved';
-        $post->save();
+        $this->postRepository->updateStatus($id);
         return redirect()->route('admin.show_unverified');
     }
 

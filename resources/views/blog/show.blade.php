@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@include('inc.navbar')
 @section('content')
 @if (session('message'))
     <div class="alert">{{ session('message') }}</div>

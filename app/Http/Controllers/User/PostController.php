@@ -5,11 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBlogRequest;
 use App\Http\Requests\UpdateBlogRequest;
-use App\Models\BlogPost;
 use App\Repositories\Interfaces\PostRepositoryInterface;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -24,7 +21,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = $this->postRepository->allPosts();
+        $posts = $this->postRepository->verifiedPosts();
         return view('blog.index', [
                 'posts' => $posts,
             ]);
@@ -47,8 +44,7 @@ class PostController extends Controller
      */
     public function store(StoreBlogRequest $request)
     {
-        // $data = $request->validated();
-        $post = $this->postRepository->storePost($request->all());
+        $post = $this->postRepository->storePost($request);
 
         return redirect('blog/' . $post->id);   
     }
@@ -58,7 +54,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $post = BlogPost::where('id',$id)->first();
+        $post = $this->postRepository->findPost($id);
         return view('blog.show', [
             'post' => $post,
         ]);
@@ -69,7 +65,7 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        $post = DB::table('blog_posts')->where('id',$id)->first();
+        $post = $this->postRepository->findPost($id);
         if(Auth::user()->id == $post->user_id){
             return view('blog.edit', [
                 'post' => $post,
@@ -84,19 +80,7 @@ class PostController extends Controller
      */
     public function update(UpdateBlogRequest $request, string $id)
     {
-        if($request->hasFile('image')){
-            $image= $request->file('image');
-            $filename = time() . '.' . $image->getClientOriginalExtension();
-            $request->image->move(public_path('images'), $filename);
-          };
-
-        $post = BlogPost::find($id);
-        $post->title = $request->title;
-        $post->body = $request->body;
-        $post->image = $filename;
-
-        $post->save();
-
+        $post = $this->postRepository->updatePost($request,$id);
         return redirect('blog/' . $post->id);
     }
 
@@ -105,7 +89,7 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        $post = BlogPost::where('id',$id)->first();
+        $post = $this->postRepository->findPost($id);
         if(Auth::user()->id == $post->user_id){
             $post->delete();
             return redirect('/blog');

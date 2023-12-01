@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Repositories\Interfaces\PostRepositoryInterface;
+use App\Repositories\Interfaces\TrashRepositoryInterface;
 use App\Repositories\PostRepository;
+use App\Repositories\TrashRepository;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(PostRepositoryInterface::class,PostRepository::class);
+        $this->app->bind(TrashRepositoryInterface::class,TrashRepository::class);
     }
 
     /**

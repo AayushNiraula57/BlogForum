@@ -3,39 +3,24 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\BlogPost;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Repositories\Interfaces\PostRepositoryInterface;
 
 class UserBlogController extends Controller
 {
+    private $postRepository;
+
+    public function __construct(PostRepositoryInterface $postRepository){
+        $this->postRepository = $postRepository;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $posts = BlogPost::with('user')->where('user_id',Auth::user()->id)->orderBy('created_at','desc')->paginate(2);
-        // $response = new ApiResponse($data,'Blog Posts Retrived Successfully!');
-        // $response = $response->successResponse();
+        $posts = $this->postRepository->userPosts();
         return view('blog.user-posts', [
             'posts' => $posts,
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -43,33 +28,10 @@ class UserBlogController extends Controller
      */
     public function show(string $id)
     {
-        $post = BlogPost::where('id',$id)->first(); 
+        $post = $this->postRepository->findPost($id); 
         return view('blog.user-post-edit', [
             'post' => $post,
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }
