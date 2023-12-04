@@ -14,6 +14,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('register_user') }}">Register</a>
                 </li>
+                <li class="nav-item mx-5">
+                    <form action="/blog">
+                        <input type="search" class="form-control" placeholder="Find Blogs Here" name="search" value="">
+                    </form>
+                </li>
                 @else
                 @auth
                 <li class="nav-item">
@@ -25,8 +30,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('blog.user_posts',Auth::user()->id)}}">My Posts | </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item mx-5">
                     <a class="nav-link" href="{{ route('signout') }}">Logout</a>
+                </li>
+                <li class="nav-item mx-5">
+                    <form action="/blog">
+                        <input type="search" class="form-control" placeholder="Find Blogs Here" name="search" value="">
+                    </form>
                 </li>
                 @endauth
                 @endguest

@@ -18,7 +18,7 @@ class VerifiedPostController extends Controller
      */
     public function index()
     {
-        $posts = $this->postRepository->verifiedPosts();
+        $posts = $this->postRepository->verifiedPosts('/admin/verified');
         return view('admin.posts.show-verified',['posts'=> $posts]);
     }
 

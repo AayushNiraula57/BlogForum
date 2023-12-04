@@ -104,4 +104,6 @@ class AuthController extends Controller
         $user->delete();
         return redirect()->route('admin.show_verified');
     }
+
+
 }

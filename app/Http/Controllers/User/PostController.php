@@ -21,7 +21,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = $this->postRepository->verifiedPosts();
+        if (request('search')) {
+            $posts = $this->postRepository->searchPost('/blog');
+        } else {
+            $posts = $this->postRepository->verifiedPosts('/blog');
+        }
         return view('blog.index', [
                 'posts' => $posts,
             ]);

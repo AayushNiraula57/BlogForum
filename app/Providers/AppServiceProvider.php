@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\ForgetPasswordRepository;
+use App\Repositories\Interfaces\ForgetPasswordInterface;
 use App\Repositories\Interfaces\PostRepositoryInterface;
 use App\Repositories\Interfaces\TrashRepositoryInterface;
 use App\Repositories\PostRepository;
@@ -18,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(PostRepositoryInterface::class,PostRepository::class);
         $this->app->bind(TrashRepositoryInterface::class,TrashRepository::class);
+        $this->app->bind(ForgetPasswordInterface::class,ForgetPasswordRepository::class);
     }
 
     /**

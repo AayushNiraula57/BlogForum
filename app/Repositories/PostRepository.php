@@ -1,9 +1,14 @@
 <?php
 namespace App\Repositories;
 
+use App\Http\Responses\ApiResponse;
 use App\Models\BlogPost;
+use App\Models\User;
+use App\Notifications\EmailNotification;
 use App\Repositories\Interfaces\PostRepositoryInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class PostRepository implements PostRepositoryInterface{
     public function allPosts(){
@@ -12,10 +17,14 @@ class PostRepository implements PostRepositoryInterface{
         // $response = $response->successResponse();
     }
 
-    public function verifiedPosts(){
-        return BlogPost::with('user')->where('status','approved')->orderBy('created_at','desc')->paginate(2);
-        // $response = new ApiResponse($posts,"All Posts Retrived Successfully");
-        // $response = $response->successResponse();
+    public function verifiedPosts($path){
+        
+        $posts = BlogPost::with('user')->where('status','approved')->latest()->get()->toArray();  
+        $posts = paginate($posts , 2);
+        $posts->withPath($path);
+        $response = new ApiResponse($posts,"All Posts Retrived Successfully");
+        $response = $response->successResponse();
+        return $response;
     }
 
     public function unverifiedPosts(){
@@ -75,10 +84,33 @@ class PostRepository implements PostRepositoryInterface{
         $post = BlogPost::find($id);
         $post->status = 'approved';
         $post->save();
+        $post = BlogPost::where('id',$id)->first();
+        $user = User::where('id',$post->user_id)->first();
+        $project = [
+            'greeting' => 'Hi '.$user->name.',',
+            'body' => "Your post titled "."'".$post->title."'"." has been accepted.",
+            'thanks' => 'Thank you for your contribution to this Blog application',
+            'actionText' => 'View Post',
+            'actionURL' => url('blog/'.$post->id),
+        ];
+  
+        Notification::send($user, new EmailNotification($project));
     }
 
     public function destroyPost($id){
         $post = BlogPost::withTrashed()->find($id);
         $post->forceDelete();
+    }
+
+    public function searchPost($location){
+        $posts = BlogPost::with('user')
+                    ->where('status','approved')
+                    ->where('title', 'like', '%' . request('search') . '%')
+                    ->latest()->get()->toArray();
+        $posts = paginate($posts , 2);
+        $posts->withPath($location);
+        $response = new ApiResponse($posts,"All Posts Retrived Successfully");
+        $response = $response->successResponse();
+        return $response;
     }
 }

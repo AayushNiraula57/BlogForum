@@ -7,9 +7,11 @@ Interface PostRepositoryInterface{
 
     public function userPosts();
 
-    public function verifiedPosts();
+    public function verifiedPosts($path);
 
     public function unverifiedPosts();
+
+    public function searchPost($path);
 
     public function storePost($data);
 

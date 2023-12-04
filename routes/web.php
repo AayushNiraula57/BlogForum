@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\TrashController;
 use App\Http\Controllers\Admin\UnverifiedPostController;
 use App\Http\Controllers\Admin\VerifiedPostController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\User\AuthController as UserAuthController;
 use App\Http\Controllers\User\PostController as UserPostController;
 use App\Http\Controllers\User\UserBlogController;
@@ -67,3 +68,8 @@ Route::group(['prefix'=>'admin','middleware'=>'auth.admin'],function(){
     Route::get('trash', [TrashController::class, 'index'])->name('admin.trash');
     Route::get('restore/{post}', [TrashController::class, 'update'])->name('admin.post_restore');
 });
+
+Route::get('forget-password',[ForgotPasswordController::class,'index'])->name('forget_password.show');
+Route::post('forget-password',[ForgotPasswordController::class,'store'])->name('forget_password.submit');
+Route::get('reset-password/{token}',[ForgotPasswordController::class,'show'])->name('reset_password,show');
+Route::post('reset-password',[ForgotPasswordController::class,'update'])->name('reset_password.submit');
