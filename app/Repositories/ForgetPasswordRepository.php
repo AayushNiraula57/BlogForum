@@ -13,7 +13,9 @@ class ForgetPasswordRepository implements ForgetPasswordInterface{
 
     public function submitForgetPasswordForm($data){
         $token = Str::random(6);
-        DB::table('password_reset_tokens')->insert([
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $data->email],
+            [
             'email' => $data->email,
             'token' => $token,
             'created_at' => now(),

@@ -105,5 +105,4 @@ class AuthController extends Controller
         return redirect()->route('admin.show_verified');
     }
 
-
 }

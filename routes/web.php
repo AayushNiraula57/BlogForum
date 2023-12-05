@@ -26,12 +26,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('home');
 });
-Route::get('/blog', [UserPostController::class, 'index'])->name('blog.index');
-Route::get('/blog/{blogPost}', [UserPostController::class, 'show'])->name('blog.show');
+Route::get('/blog', [UserPostController::class, 'index'])->name('blog.index')->middleware('2fa');
+Route::get('/blog/{blogPost}', [UserPostController::class, 'show'])->name('blog.show')->middleware('2fa');
 
 
 
-Route::middleware('auth')->group(function(){
+Route::middleware(['auth','2fa'])->group(function(){
 Route::get('/blog/post/create', [UserPostController::class, 'create'])->name('blog.create');
 Route::post('/blog/post/create', [UserPostController::class, 'store'])->name('blog.store');
 Route::get('/blog/{blogPost}/edit', [UserPostController::class, 'edit'])->name('blog.edit');
@@ -73,3 +73,7 @@ Route::get('forget-password',[ForgotPasswordController::class,'index'])->name('f
 Route::post('forget-password',[ForgotPasswordController::class,'store'])->name('forget_password.submit');
 Route::get('reset-password/{token}',[ForgotPasswordController::class,'show'])->name('reset_password,show');
 Route::post('reset-password',[ForgotPasswordController::class,'update'])->name('reset_password.submit');
+
+Route::get('2fa', [App\Http\Controllers\TwoFAController::class, 'index'])->name('2fa.index');
+Route::post('2fa', [App\Http\Controllers\TwoFAController::class, 'store'])->name('2fa.post');
+Route::get('2fa/reset', [App\Http\Controllers\TwoFAController::class, 'update'])->name('2fa.resend');

@@ -7,18 +7,16 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ResetPasswordNotification extends Notification implements ShouldQueue
+class VerificationCodeNotification extends Notification implements ShouldQueue
 {
     use Queueable;
-
-    protected $project;
-
+    protected $details;
     /**
      * Create a new notification instance.
      */
-    public function __construct($project)
+    public function __construct($details)
     {
-        $this->project = $project;
+        $this->details = $details;
     }
 
     /**
@@ -37,9 +35,9 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->greeting($this->project['greeting'])
-                    ->line($this->project['body'])
-                    ->action($this->project['actionText'], $this->project['actionURL'])
+                    ->line($this->details['title'])
+                    ->line($this->details['code'])
+                    ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
     }
 

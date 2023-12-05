@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use App\Models\User;
+use App\Models\UserCode;
+use App\Notifications\VerificationCodeNotification;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -25,9 +28,14 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('blog')
-                        ->withSuccess('Signed in');
+            Session::put('authenticated',true);
+            generateCode(auth()->user());
+  
+            return redirect()->route('2fa.index');
+            // return redirect()->intended('blog')
+            //             ->withSuccess('Signed in');
         }
+
         return redirect("login")->withSuccess('Login details are not valid');
     }
 
@@ -61,4 +69,5 @@ class AuthController extends Controller
   
         return Redirect('login');
     }
+
 }

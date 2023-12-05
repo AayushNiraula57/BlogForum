@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('two_factor_code')->nullable();
-            $table->dateTime('two_factor_expires_at')->nullable();
+        Schema::create('user_codes', function (Blueprint $table) {
+            $table->id();
+            $table->integer('user_id');
+            $table->string('code');
+            $table->timestamps();
         });
     }
 
@@ -22,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('user_codes');
     }
 };
